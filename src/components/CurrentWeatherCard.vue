@@ -1,5 +1,5 @@
 <script>
-
+import dayjs from 'dayjs'
 
 export default {
     props: ['passData'],
@@ -14,6 +14,11 @@ export default {
             console.log(this.url)
         }
     },
+    computed: {
+        lastUpdate() {
+            return dayjs.unix(`${this.passData.dt}`).format('HH:mm:ss')
+        }
+    },
     created() {
         this.pickIcon()
     }
@@ -21,14 +26,17 @@ export default {
 </script>
 
 <template>
-    <div class="card">
+    <div class="currentWeather__card">
         <div class="card__header">
             <img :src='url' :alt='url' class="card__image">
         </div>
         <div class="card__body">
-            <h4>{{ passData.weather[0].main }}</h4>
-            <p>氣溫：{{ passData.temp }}</p>
-            <p>體感溫度：{{ passData.feels_like }}</p>
+            <h3>{{today}}</h3>
+            <p>{{ passData.weather[0].description }}</p>
+            <p>{{ passData.temp.toFixed(1) }}°</p>
+            <p>體感溫度：{{ passData.feels_like.toFixed(1) }}°</p>
+            <p>濕度：{{ passData.humidity }}</p>
+            <p>最後更新：{{lastUpdate}}</p>
         </div>
     </div>
 </template>
@@ -36,8 +44,6 @@ export default {
 
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
-
 *,
 *::before,
 *::after {
@@ -47,12 +53,12 @@ export default {
 }
 
 img {
-    max-width:100%;
+    max-width: 100%;
     display: block;
     object-fit: cover;
 }
 
-.card {
+.currentWeather__card {
     display: flex;
     width: 387px;
     overflow: hidden;
@@ -74,5 +80,4 @@ img {
     font-size: 1.5rem;
     text-transform: capitalize;
 }
-
 </style>

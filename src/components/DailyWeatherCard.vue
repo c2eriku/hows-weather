@@ -10,29 +10,28 @@ export default {
     methods: {
         pickIcon() {
             this.url = `http://openweathermap.org/img/wn/${this.passData.weather[0].icon}@2x.png`
-            console.log(this.url)  
+            console.log(this.url)
         }
     },
     computed: {
-    currentDate() {
-      return dayjs().format(`MMMM Do YYYY`)
+        currentDate() {
+            return dayjs().format(`MMMM Do YYYY`)
+        },
     },
-},
     created() {
-    this.pickIcon()
-  }
+        this.pickIcon()
+    }
 }
 </script>
 
 <template>
-    <div class="Dailycard">
-        <div class="DailyImg">
+    <div class="daily__card">
+        <div class="daily__img">
             <img :src='url' :alt='url' class="card__image">
         </div>
-        <div class="Dailybody">
-            <p>{{ passData.weather[0].main }}</p>
-            <p>氣溫：{{passData.temp.day}}</p>
-            <p>體感溫度：{{passData.feels_like.day}}</p>
+        <div class="daily__body">
+            <p>min {{ passData.temp.min.toFixed(1) }}°</p>
+            <p class="temp__max">MAX {{ passData.temp.max.toFixed(1) }}°</p>
         </div>
     </div>
 </template>
@@ -40,13 +39,7 @@ export default {
 
 
 <style>
-img {
-    max-height:100%;
-    display: block;
-    object-fit: cover;
-}
-
-.Dailycard {
+.daily__card {
     display: flex;
     height: 50px;
     overflow: hidden;
@@ -54,14 +47,29 @@ img {
     border-radius: 1em;
     background: #ECE9E6;
     background: linear-gradient(to right, #FFFFFF, #ECE9E6);
-
 }
 
-
-.Dailybody {
-    padding: 1rem;
+.daily__img {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+}
+
+.daily__img img {
+    height: 100%;
+}
+
+.daily__body {
+    display: flex;
+    padding: 1rem;
+    width: 100%;
     gap: .5rem;
 }
 
+.temp__min {}
+
+.temp__max {
+    margin-left: auto;
+}
 </style>
