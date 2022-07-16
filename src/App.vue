@@ -22,23 +22,41 @@ export default {
     DailyWeatherCard,
   },
   beforeCreate() {
-    console.log('Loading...')
+    // beforeCreate
   },
   data() {
     return {
       api_key: '07cc2a6ed664f9d0a145b0b180c530f2',
       base_url: 'https://api.openweathermap.org/data/2.5/',
       query: 'Taipei',
+      locate: [],
       fetchData: {},
       date: []
     }
   },
   methods: {
+    getUserLocation() {
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          success => {
+            this.locate.push(success.coords.latitude);
+            this.locate.push(success.coords.longitude);
+            resolve();
+          },
+          error => {
+            console.log(error.message);
+            // Taipei geolocation
+            this.locate.push(25.037525);
+            this.locate.push(121.563782);
+            reject();
+          })
+      })
+    },
     async fetchWeather() {
+      await this.getUserLocation();
       const data = await fetch(`${this.base_url}onecall?lat=24.9&lon=131.4&exclude=minutely,hourly&units=metric&lang=zh_tw&appid=${this.api_key}`)
-
       this.fetchData = await data.json()
-      console.log(await this.fetchData)
+      //console.log(await this.fetchData)
     },
     async dayConvert() {
       const current = dayjs()
@@ -46,7 +64,6 @@ export default {
       for (let i = 1; i <= 7; i++) {
         this.date.push(dayjs().add(i, 'day').format('ddd'))
       }
-      console.log(this.date)
     }
   },
   created() {

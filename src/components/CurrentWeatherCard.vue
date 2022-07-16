@@ -11,7 +11,7 @@ export default {
     methods: {
         pickIcon() {
             this.url = `http://openweathermap.org/img/wn/${this.passData.weather[0].icon}@4x.png`
-            console.log(this.url)
+            //console.log(this.url)
         }
     },
     computed: {
@@ -60,6 +60,7 @@ img {
 
 .currentWeather__card {
     display: flex;
+    margin-top: 10px;
     width: 387px;
     overflow: hidden;
     box-shadow: 0 .1rem 1rem rgba(0, 0, 0, 0.1);

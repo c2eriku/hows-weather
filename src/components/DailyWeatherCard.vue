@@ -10,7 +10,7 @@ export default {
     methods: {
         pickIcon() {
             this.url = `http://openweathermap.org/img/wn/${this.passData.weather[0].icon}@2x.png`
-            console.log(this.url)
+            //console.log(this.url)
         }
     },
     computed: {
