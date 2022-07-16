@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import Home from './Home.vue'
+import NotFound from './NotFound.vue'
 
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)

@@ -5,7 +5,8 @@ export default {
     props: ['passData'],
     data() {
         return {
-            url: {}
+            url: {},
+            show: false
         }
     },
     methods: {
@@ -21,24 +22,28 @@ export default {
     },
     created() {
         this.pickIcon()
+    },
+    mounted() {
+        this.show = true;
     }
 }
 </script>
 
 <template>
-    <div class="currentWeather__card">
-        <div class="card__header">
-            <img :src='url' :alt='url' class="card__image">
+    <Transition name="bounce">
+        <div class="currentWeather__card" v-if="show">
+            <div class="card__header">
+                <img :src='url' :alt='url' class="card__image">
+            </div>
+            <div class="card__body">
+                <p>{{ passData.weather[0].description }}</p>
+                <p>{{ passData.temp.toFixed(1) }}°</p>
+                <p>體感溫度：{{ passData.feels_like.toFixed(1) }}°</p>
+                <p>濕度：{{ passData.humidity }}</p>
+                <p>最後更新：{{ lastUpdate }}</p>
+            </div>
         </div>
-        <div class="card__body">
-            <h3>{{today}}</h3>
-            <p>{{ passData.weather[0].description }}</p>
-            <p>{{ passData.temp.toFixed(1) }}°</p>
-            <p>體感溫度：{{ passData.feels_like.toFixed(1) }}°</p>
-            <p>濕度：{{ passData.humidity }}</p>
-            <p>最後更新：{{lastUpdate}}</p>
-        </div>
-    </div>
+    </Transition>
 </template>
 
 
@@ -80,5 +85,23 @@ img {
 .card__body h4 {
     font-size: 1.5rem;
     text-transform: capitalize;
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
