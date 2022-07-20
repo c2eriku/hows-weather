@@ -6,13 +6,14 @@ export default {
     data() {
         return {
             url: {},
+            // avalibale animate
             show: false
         }
     },
     methods: {
         pickIcon() {
+            // get openweathermap.org weather icon
             this.url = `http://openweathermap.org/img/wn/${this.passData.weather[0].icon}@4x.png`
-            //console.log(this.url)
         }
     },
     computed: {

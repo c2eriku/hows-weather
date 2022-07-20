@@ -6,14 +6,15 @@ export default {
     data() {
         return {
             url: {},
+            // avalibale animate
             show: false
         }
 
     },
     methods: {
         pickIcon() {
+            // get openweathermap.org weather icon
             this.url = `http://openweathermap.org/img/wn/${this.passData.weather[0].icon}@2x.png`
-            //console.log(this.url)
         }
     },
     computed: {
@@ -40,8 +41,6 @@ export default {
         </div>
     </Transition>
 </template>
-
-
 
 <style>
 .daily__card {

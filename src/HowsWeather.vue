@@ -1,6 +1,10 @@
 <script>
 import CurrentWeatherCard from './components/CurrentWeatherCard.vue'
 import DailyWeatherCard from './components/DailyWeatherCard.vue'
+// vue-loading-overlay
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+// dayjs
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import updateLocale from 'dayjs/plugin/updateLocale'
@@ -8,21 +12,13 @@ import 'dayjs/locale/zh-tw'
 dayjs.extend(advancedFormat)
 dayjs.extend(updateLocale)
 dayjs.locale('zh-tw')
-dayjs.updateLocale('zh-tw', {
-  weekdays: [
-    "週日", "週一", "週二", "週三", "週四", "週五", "週六"
-  ]
-})
-
 
 export default {
   name: 'app',
   components: {
     CurrentWeatherCard,
     DailyWeatherCard,
-  },
-  beforeCreate() {
-    // beforeCreate
+    Loading
   },
   data() {
     return {
@@ -31,7 +27,10 @@ export default {
       query: 'Taipei',
       locate: [],
       fetchData: {},
-      date: []
+      date: [],
+      // vue-loading-overlay
+      isLoading: true,
+      fullPage: true,
     }
   },
   methods: {
@@ -45,7 +44,7 @@ export default {
           },
           error => {
             console.log(error.message);
-            // Taipei geolocation
+            // push Taipei geolocation
             this.locate.push(25.037525);
             this.locate.push(121.563782);
             reject();
@@ -56,31 +55,28 @@ export default {
       await this.getUserLocation();
       const data = await fetch(`${this.base_url}onecall?lat=24.9&lon=131.4&exclude=minutely,hourly&units=metric&lang=zh_tw&appid=${this.api_key}`)
       this.fetchData = await data.json()
-      //console.log(await this.fetchData)
-    },
-    async dayConvert() {
-      const current = dayjs()
-      this.date.push(dayjs().format('ddd'))
-      for (let i = 1; i <= 7; i++) {
-        this.date.push(dayjs().add(i, 'day').format('ddd'))
-      }
+
+      /* show loading overlay *
+      setTimeout(() => {
+        console.log('Testing loading overlay vue.')
+        this.isLoading = true;
+      }, 5000)
+      /**/
     }
   },
   created() {
     this.fetchWeather()
-    this.dayConvert()
   },
-  computed: {
-    today() {
-      return dayjs().format(`ddd MMMM Do YYYY`)
-    }
+  mounted() {
+    this.isLoading = false;
   }
 }
-
 </script>
 
 <template>
   <div id="container">
+    <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="fullPage" :loader="'dots'" />
+
     <CurrentWeatherCard :passData='fetchData.current' />
     <DailyWeatherCard :passData='fetchData.daily[1]' />
     <DailyWeatherCard :passData='fetchData.daily[2]' />
@@ -89,11 +85,7 @@ export default {
     <DailyWeatherCard :passData='fetchData.daily[5]' />
     <DailyWeatherCard :passData='fetchData.daily[6]' />
     <DailyWeatherCard :passData='fetchData.daily[7]' />
-<!--
-    <div>
-      {{ fetchData.daily[1] }}
-    </div>
--->
+
   </div>
 </template>
 
@@ -130,5 +122,4 @@ tr {
 .v-leave-to {
   opacity: 0;
 }
-
 </style>

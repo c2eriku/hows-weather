@@ -1,9 +1,9 @@
 <script>
-import Home from './Home.vue'
+import HowsWeather from './HowsWeather.vue'
 import NotFound from './NotFound.vue'
 
 const routes = {
-  '/': Home,
+  '/': HowsWeather,
   '/NotFound': NotFound
 }
 
@@ -28,8 +28,9 @@ export default {
 </script>
 
 <template>
-  <a href="#/">Home</a> |
-  <a href="#/about">About</a> |
-  <a href="#/OFFLINEPAGE">Disconnect Test Page</a>
+<!-- router example template
+  <a href="#/">Home</a>
+-->  
+  
   <component :is="currentView" />
 </template>
