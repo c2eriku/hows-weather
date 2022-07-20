@@ -67,7 +67,6 @@ img {
 .currentWeather__card {
     display: flex;
     margin-top: 10px;
-    width: 387px;
     overflow: hidden;
     box-shadow: 0 .1rem 1rem rgba(0, 0, 0, 0.1);
     border-radius: 1em;

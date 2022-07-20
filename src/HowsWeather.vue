@@ -9,9 +9,12 @@ import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import 'dayjs/locale/zh-tw'
+import 'dayjs/locale/ja'
 dayjs.extend(advancedFormat)
 dayjs.extend(updateLocale)
 dayjs.locale('zh-tw')
+// browser storage
+var myStorage = window.localStorage;
 
 export default {
   name: 'app',
@@ -31,6 +34,7 @@ export default {
       // vue-loading-overlay
       isLoading: true,
       fullPage: true,
+      locale: 'zh-tw'
     }
   },
   methods: {
@@ -44,6 +48,7 @@ export default {
           },
           error => {
             console.log(error.message);
+            if (myStorage == null) this.fetchData = myStorage
             // push Taipei geolocation
             this.locate.push(25.037525);
             this.locate.push(121.563782);
@@ -53,8 +58,9 @@ export default {
     },
     async fetchWeather() {
       await this.getUserLocation();
-      const data = await fetch(`${this.base_url}onecall?lat=24.9&lon=131.4&exclude=minutely,hourly&units=metric&lang=zh_tw&appid=${this.api_key}`)
+      const data = await fetch(`${this.base_url}onecall?lat=${this.locate[0]}&lon=${this.locate[1]}&exclude=minutely,hourly&units=metric&lang=zh_tw&appid=${this.api_key}`)
       this.fetchData = await data.json()
+      myStorage = this.fetchData
 
       /* show loading overlay *
       setTimeout(() => {
@@ -62,6 +68,10 @@ export default {
         this.isLoading = true;
       }, 5000)
       /**/
+    },
+    setLocale(locale){
+      dayjs.locale(locale)
+      this.fetchWeather()
     }
   },
   created() {
@@ -76,6 +86,13 @@ export default {
 <template>
   <div id="container">
     <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="fullPage" :loader="'dots'" />
+
+    Selected Language: 
+    <select v-model="locale" @change="setLocale(locale)">
+      <option>zh-tw</option>
+      <option>en</option>
+      <option>ja</option>
+    </select>
 
     <CurrentWeatherCard :passData='fetchData.current' />
     <DailyWeatherCard :passData='fetchData.daily[1]' />
@@ -108,6 +125,7 @@ tr {
 
 #container {
   align-items: center;
+  padding: 5px;
   width: 387px;
   max-width: 387;
   min-width: 300;
