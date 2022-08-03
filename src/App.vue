@@ -20,6 +20,12 @@ export default {
       return routes[this.currentPath.slice(1) || '/'] || NotFound
     }
   },
+  watch: {
+    isOnline: function(){
+      if (!navigator.onLine) return NotFound
+      else return routes[this.currentPath.slice(1) || '/'] 
+    }
+  },
   mounted() {
     window.addEventListener('hashchange', () => {
       this.currentPath = window.location.hash
@@ -29,9 +35,6 @@ export default {
 </script>
 
 <template>
-  <!-- router example template-->
-  <a href="#/">Home</a> | 
-  <a href="#/NotFound">Route to NotFound page</a> | 
-  <input type="checkbox" v-model="isOnline" disabled/> isOnline
   <component :is="currentView" />
+  
 </template>

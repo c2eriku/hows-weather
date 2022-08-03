@@ -13,8 +13,6 @@ import 'dayjs/locale/ja'
 dayjs.extend(advancedFormat)
 dayjs.extend(updateLocale)
 dayjs.locale('zh-tw')
-// browser storage
-var myStorage = window.localStorage;
 
 export default {
   name: 'app',
@@ -29,7 +27,7 @@ export default {
       base_url: 'https://api.openweathermap.org/data/2.5/',
       query: 'Taipei',
       locate: [],
-      fetchData: {},
+      fetchData: null,
       date: [],
       // vue-loading-overlay
       isLoading: true,
@@ -48,7 +46,6 @@ export default {
           },
           error => {
             console.log(error.message);
-            if (myStorage == null) this.fetchData = myStorage
             // push Taipei geolocation
             this.locate.push(25.037525);
             this.locate.push(121.563782);
@@ -60,8 +57,7 @@ export default {
       await this.getUserLocation();
       const data = await fetch(`${this.base_url}onecall?lat=${this.locate[0]}&lon=${this.locate[1]}&exclude=minutely,hourly&units=metric&lang=zh_tw&appid=${this.api_key}`)
       this.fetchData = await data.json()
-      myStorage = this.fetchData
-
+      this.isLoading = false;
       /* show loading overlay *
       setTimeout(() => {
         console.log('Testing loading overlay vue.')
@@ -69,16 +65,13 @@ export default {
       }, 5000)
       /**/
     },
-    setLocale(locale){
+    setLocale(locale) {
       dayjs.locale(locale)
       this.fetchWeather()
     }
   },
   created() {
     this.fetchWeather()
-  },
-  mounted() {
-    this.isLoading = false;
   }
 }
 </script>
@@ -87,7 +80,7 @@ export default {
   <div id="container">
     <loading v-model:active="isLoading" :can-cancel="false" :is-full-page="fullPage" :loader="'dots'" />
 
-    Selected Language: 
+    Selected Language:
     <select v-model="locale" @change="setLocale(locale)">
       <option>zh-tw</option>
       <option>en</option>
